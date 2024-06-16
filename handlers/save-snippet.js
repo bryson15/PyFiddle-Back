@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Snippet from '../models/snippet.js';
-//import { getUniqueName } from './name.js';
+import { validationResult } from 'express-validator';
 
 const generateRandomString = (length = 8) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -119,6 +119,11 @@ const getSnippetDetails = async (userId, path) => {
 }
 
 export const handleSnippetSave = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
     const { name, path, content } = req.body;
 
     if (!req.session.userId || !req.session.accessToken) {

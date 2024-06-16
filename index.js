@@ -8,6 +8,7 @@ import { handleSnippetSave } from './handlers/save-snippet.js';
 import { handleSnippetRequest } from './handlers/get-snippet.js';
 import { handleSnippetsRequest } from './handlers/get-snippets.js';
 import { handleAuthentication } from './handlers/auth.js';
+import { body } from 'express-validator';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -42,7 +43,11 @@ app.use(express.json());
 
 app.get('/auth', handleAuthentication);
 
-app.post('/snippet', handleSnippetSave);
+app.post('/snippet', [
+    body('name').trim().escape().isLength({ min: 1 }).withMessage('Name cannot be empty'),
+    body('path').trim().escape().isLength({ min: 1 }).withMessage('Path cannot be empty'),
+    body('content').trim().escape().isLength({ min: 1 }).withMessage('Content cannot be empty')
+], handleSnippetSave);
 
 app.get('/snippet/:path', handleSnippetRequest);
 

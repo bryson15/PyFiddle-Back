@@ -1,5 +1,6 @@
 import axios from 'axios';
 import User from '../models/user.js';
+import { validationResult } from 'express-validator';
 
 const exchangeCodeForToken = async (code) => {
     const url = 'https://github.com/login/oauth/access_token';
@@ -48,6 +49,11 @@ const storeUserInformation = async ({ id, login, email }) => {
 }
 
 export const handleAuthentication = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
     const { code, state } = req.query;
     const redirectUrl = decodeURIComponent(state) || '/';
 

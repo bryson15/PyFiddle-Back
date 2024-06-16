@@ -1,26 +1,12 @@
 import axios from 'axios';
 import Snippet from '../models/snippet.js';
-
-/*
-export const handleSnippetRequest = async (req, res) => {
-    const { path } = req.params;
-
-    try {
-      const snippet = await Snippet.findOne({ path });
-      if (!snippet) {
-        return res.status(404).json({ message: 'Snippet not found' });
-      }
-      
-      res.json({ gistId: snippet.gistId, fileName: snippet.name });
-        
-    } catch (error) {
-        console.error('Error fetching snippet:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-}*/
-
+import { validationResult } from 'express-validator';
 
 export const handleSnippetRequest = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   const { path } = req.params;
   try {
     const snippet = await Snippet.findOne({ path });
