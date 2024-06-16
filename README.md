@@ -10,7 +10,10 @@ git clone https://github.com/bryson15/PyFiddle-Back.git pyfiddle-backend
 cd pyfiddle-backend
 ```
 
-### Step 3. Build and Run Docker Compose
+### Step 3. `Create .env.development` File
+- Copy code from assessment submission
+
+### Step 4. Build and Run Docker Compose
 ```powershell
 docker-compose up --build
 ```
